@@ -103,7 +103,8 @@ def main(args):
         face_locations = get_face(image, True)
     
     if len(face_locations) > 0:
-        print(len(face_locations))
+        if len(face_locations) > 1:
+            print("Multiple faces found:", len(face_locations), ". using only the first")
         face = face_locations[0]
         print("Face found at:", face)
         img_rect = get_square(image, face)
