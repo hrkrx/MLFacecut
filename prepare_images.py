@@ -48,7 +48,7 @@ def get_square(image, face):
 def denoise_and_scale(image, width, height, waifu_executable):
     image_copy = image.copy()
     (H, W) = image_copy.shape[:2]
-    
+
     if waifu_executable != None and H < height and W < width:
         if os.path.isdir("temp") == False:
             os.mkdir("temp")
@@ -100,7 +100,7 @@ if __name__ == '__main__':
         help="path to input image")
     ap.add_argument("-w", "--width", type=int, default=512,
         help="resized image width (should be multiple of 32)")
-    ap.add_argument("-e", "--height", type=int, default=512,
+    ap.add_argument("-h", "--height", type=int, default=512,
         help="resized image height (should be multiple of 32)")
     ap.add_argument("-o", "--out-file", type=str, default="out.jpg",
         help="the file to save the result (always overwrite)")
