@@ -5,7 +5,7 @@ import dlib
 import subprocess
 import face_recognition
 
-show_result = False
+show_result = True
 
 def get_image(args):
     image = cv2.imread(args["image"])
@@ -57,7 +57,9 @@ def denoise_and_scale(image, width, height, waifu_executable):
         arguments = "-i \"{}\" -m noise_scale --scale_ratio 2 --noise_level 1".format(file_path)
         command = "{} {}".format(waifu_executable, arguments)
         print(command)
-        print(subprocess.call(command, shell=True))
+        result = subprocess.call(command, shell=True)
+        if result != 0:
+            print("Error in waifu2x call:", result)
        
         image_copy = cv2.imread("temp/waifu multi(CUnet)(noise_scale)(Level1)(x2.000000)/waifu.png")
         os.unlink("temp/waifu multi(CUnet)(noise_scale)(Level1)(x2.000000)/waifu.png")
@@ -74,6 +76,7 @@ def main(args):
         face_locations = get_face(image, True)
     
     if len(face_locations) > 0:
+        print(len(face_locations))
         face = face_locations[0]
         print("Face found at:", face)
         img_rect = get_square(image, face)
@@ -98,15 +101,15 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", "--image", type=str,
         help="path to input image")
-    ap.add_argument("-w", "--width", type=int, default=512,
+    ap.add_argument("-y", "--width", type=int, default=512,
         help="resized image width (should be multiple of 32)")
-    ap.add_argument("-h", "--height", type=int, default=512,
+    ap.add_argument("-x", "--height", type=int, default=512,
         help="resized image height (should be multiple of 32)")
     ap.add_argument("-o", "--out-file", type=str, default="out.jpg",
         help="the file to save the result (always overwrite)")
     ap.add_argument("-f", "--force-model", default=None,
         help="Force the use of the hog or cnn model", type=str)
-    ap.add_argument("-x", "--waifu-executable", type=str, default=None,
+    ap.add_argument("-w", "--waifu-executable", type=str, default=None,
         help="If set, it is used to upscale the images, results in smaller images actually being usable")
 
     args = vars(ap.parse_args())

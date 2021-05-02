@@ -1,2 +1,4 @@
 temp/*
 .vscode/*
+do_not_sync*
+out*
