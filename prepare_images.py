@@ -15,9 +15,8 @@ def get_face(image, override = False):
     if dlib.DLIB_USE_CUDA is False or override == "hog":
         print ("using hog")
         face_locations = face_recognition.face_locations(image, model="hog")
-    elif override == "csc":
+    elif override == "csc-face":
         faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-        eye_cascade = cv2.CascadeClassifier("haarcascade_eye.xml")
 
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -29,6 +28,19 @@ def get_face(image, override = False):
             #flags = cv2.CASCADE_SCALE_IMAGE
         )
         face_locations = [(f[1], f[0]+f[2], f[1]+f[3], f[0]) for f in faces]
+    elif override == "csc-eyes":
+        eye_cascade = cv2.CascadeClassifier("haarcascade_eye.xml")
+
+        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        eyes = eye_cascade.detectMultiScale(
+            gray_image,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            minSize=(30, 30),
+            #flags = cv2.CASCADE_SCALE_IMAGE
+        )
+        face_locations = [(f[1], f[0]+f[2], f[1]+f[3], f[0]) for f in eyes]
     else:
         print ("using cnn")
         face_locations = face_recognition.face_locations(image, model="cnn") # for better face-recognition 
