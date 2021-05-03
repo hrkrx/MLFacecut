@@ -16,6 +16,7 @@ def get_face(image, override = False):
         face_locations = face_recognition.face_locations(image, model="hog")
 
     elif override == "csc-face":
+        print ("using csc-face")
         faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -30,6 +31,7 @@ def get_face(image, override = False):
         face_locations = [(f[1], f[0]+f[2], f[1]+f[3], f[0]) for f in faces]
 
     elif override == "csc-face-alt":
+        print ("using csc-face-alt")
         faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_alt.xml")
 
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -44,6 +46,8 @@ def get_face(image, override = False):
         face_locations = [(f[1], f[0]+f[2], f[1]+f[3], f[0]) for f in faces]
 
     elif override == "csc-eyes-glasses":
+        #TODO average both eyes into one rect
+        print ("using csc-eyes-glasses")
         faceCascade = cv2.CascadeClassifier("haarcascade_eye_tree_eyeglasses.xml")
 
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -58,6 +62,8 @@ def get_face(image, override = False):
         face_locations = [(f[1], f[0]+f[2], f[1]+f[3], f[0]) for f in faces]
 
     elif override == "csc-eyes":
+        #TODO average both eyes into one rect
+        print ("using csc-eyes")
         eye_cascade = cv2.CascadeClassifier("haarcascade_eye.xml")
 
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -72,6 +78,7 @@ def get_face(image, override = False):
         print(eyes)
         face_locations = [(f[1], f[0]+f[2], f[1]+f[3], f[0]) for f in eyes]
     elif override == "facenet":
+        print ("using facenet")
         face_locations = []
     else:
         print ("using cnn")
@@ -121,7 +128,7 @@ def denoise_and_scale(image, width, height, waifu_executable):
             print("Error in waifu2x call:", result)
        
         image_copy = cv2.imread("temp/waifu(CUnet)(noise_scale)(Level1)(x2.000000).png")
-        os.unlink("temp/waifu(CUnet)(noise_scale)(Level1)(x2.000000)waifu.png")
+        os.unlink("temp/waifu(CUnet)(noise_scale)(Level1)(x2.000000).png")
 
     return cv2.resize(image_copy, (width, height))
 
@@ -129,18 +136,26 @@ def main(args):
     image = get_image(args)
     face_locations = get_face(image, args["force_model"])
 
+    #TODO: Add rotation testing
+
     if show_result is True:
         print(face_locations)
 
     if len(face_locations) < 1 and args["force_model"] != "cnn":
         print("No face was detected")
-
-        #TODO: Add rotation testing
         
-        print("using cnn, this might take a while")
         face_locations = get_face(image, "cnn")
-        
     
+    if len(face_locations) < 1 and args["force_model"] != "csc-face":
+        print("No face was detected")
+        
+        face_locations = get_face(image, "csc-face")
+    
+    if len(face_locations) < 1 and args["force_model"] != "csc-eyes":
+        print("No face was detected")
+        
+        face_locations = get_face(image, "csc-eyes")
+        
     if len(face_locations) > 0:
         if len(face_locations) > 1:
             print("Multiple faces found:", len(face_locations), ". using only the first")
