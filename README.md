@@ -10,4 +10,5 @@ Either load from another python script and use the run(...) method or call the s
 it uses opencv-python, face-recognition, so you might need to pip install those before usage.
 Also face-recognition is using dlib which is GPU accelerated so install CUDA befor installing face-recognition.
 
+
 The example face is from https://thispersondoesnotexist.com/
