@@ -4,7 +4,7 @@ a python script to prepare face images for machine learning
 # Usage
 Either load from another python script and use the run(...) method or call the script directly like 
 
-`python prepare_images.py -i example1_small.jpg -f cnn -x "waifu2x-command-line-executeble" -w desiredXsize -h desiredYsize -o out.jpg`
+`python prepare_images.py -i example1_small.jpg -f cnn -w "waifu2x-command-line-executeble" -x desiredXsize -y desiredYsize -o out.jpg`
 
 # About the script
 it uses opencv-python, face-recognition, so you might need to pip install those before usage.
